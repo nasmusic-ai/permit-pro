@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Eye, EyeOff, Lock, Mail, Building2 } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -36,13 +36,13 @@ export function LoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     setError('');
-    
+
     try {
       const success = await login(data.email, data.password);
       if (success) {
         navigate('/dashboard');
       } else {
-        setError('Invalid email or password. Try demo credentials below.');
+        setError('Invalid email or password.');
       }
     } catch {
       setError('An error occurred. Please try again.');
@@ -55,8 +55,12 @@ export function LoginForm() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#E3F2FD] to-[#BBDEFB] p-4">
       <Card className="w-full max-w-md shadow-xl animate-slide-up">
         <CardHeader className="space-y-4 text-center">
-          <div className="mx-auto w-16 h-16 bg-[#1A237E] rounded-full flex items-center justify-center">
-            <Building2 className="w-8 h-8 text-white" />
+          <div className="mx-auto w-15 h-15 bg-[#1A237E] rounded-full flex items-center justify-center">
+            <img
+              src="https://github.com/nasmusic-ai/RAW/blob/main/Permit-pro.png?raw=true" // replace with your PNG URL
+              alt="Building Icon"
+              className="w-12 h-12 object-contain"
+            />
           </div>
           <div>
             <CardTitle className="text-2xl font-bold text-[#1A237E]">
@@ -73,12 +77,16 @@ export function LoginForm() {
               <AlertDescription className="text-red-700">{error}</AlertDescription>
             </Alert>
           )}
-          
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-[#1A237E]">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjkfSDCkgi8pVPZTKuNmNSfzaOqVSRPVX2WA&s" // replace with your PNG URL
+                  alt="Mail Icon"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+                />
                 <Input
                   id="email"
                   type="email"
@@ -95,7 +103,11 @@ export function LoginForm() {
             <div className="space-y-2">
               <Label htmlFor="password" className="text-[#1A237E]">Password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT80kdItiqvo6A_di6i8pqPicZJTRqkTVyAlQ&s" // replace with your PNG URL
+                  alt="Lock Icon"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+                />
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
@@ -125,7 +137,7 @@ export function LoginForm() {
             </Button>
           </form>
 
-          <div className="text-center space-y-2">
+          <div className="text-center space-y-2 mt-4">
             <p className="text-sm text-gray-600">
               Don't have an account?{' '}
               <button
@@ -135,64 +147,6 @@ export function LoginForm() {
                 Register here
               </button>
             </p>
-          </div>
-
-          <div className="border-t pt-4 mt-4">
-            <p className="text-xs text-center text-gray-500 mb-2">Demo Credentials</p>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <button
-                onClick={() => {
-                  const emailInput = document.getElementById('email') as HTMLInputElement;
-                  const passwordInput = document.getElementById('password') as HTMLInputElement;
-                  if (emailInput && passwordInput) {
-                    emailInput.value = 'applicant@demo.com';
-                    passwordInput.value = 'demo123';
-                  }
-                }}
-                className="p-2 bg-[#FFEB3B]/20 hover:bg-[#FFEB3B]/40 rounded text-[#1A237E] font-medium transition-colors"
-              >
-                Applicant
-              </button>
-              <button
-                onClick={() => {
-                  const emailInput = document.getElementById('email') as HTMLInputElement;
-                  const passwordInput = document.getElementById('password') as HTMLInputElement;
-                  if (emailInput && passwordInput) {
-                    emailInput.value = 'staff@demo.com';
-                    passwordInput.value = 'demo123';
-                  }
-                }}
-                className="p-2 bg-[#FFEB3B]/20 hover:bg-[#FFEB3B]/40 rounded text-[#1A237E] font-medium transition-colors"
-              >
-                Staff
-              </button>
-              <button
-                onClick={() => {
-                  const emailInput = document.getElementById('email') as HTMLInputElement;
-                  const passwordInput = document.getElementById('password') as HTMLInputElement;
-                  if (emailInput && passwordInput) {
-                    emailInput.value = 'treasurer@demo.com';
-                    passwordInput.value = 'demo123';
-                  }
-                }}
-                className="p-2 bg-[#FFEB3B]/20 hover:bg-[#FFEB3B]/40 rounded text-[#1A237E] font-medium transition-colors"
-              >
-                Treasurer
-              </button>
-              <button
-                onClick={() => {
-                  const emailInput = document.getElementById('email') as HTMLInputElement;
-                  const passwordInput = document.getElementById('password') as HTMLInputElement;
-                  if (emailInput && passwordInput) {
-                    emailInput.value = 'admin@demo.com';
-                    passwordInput.value = 'demo123';
-                  }
-                }}
-                className="p-2 bg-[#FFEB3B]/20 hover:bg-[#FFEB3B]/40 rounded text-[#1A237E] font-medium transition-colors"
-              >
-                Admin
-              </button>
-            </div>
           </div>
         </CardContent>
       </Card>
