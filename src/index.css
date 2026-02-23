@@ -35,18 +35,24 @@
     --sidebar-border: 207 50% 85%;
     --sidebar-ring: 231 74% 30%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
+
   html {
     font-family: 'PT Sans', sans-serif;
   }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'PT Sans', sans-serif;
+
+    /* Safe area padding for mobile devices (notch/status bar) */
+    padding-top: env(safe-area-inset-top, 1rem);
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
+    padding-bottom: env(safe-area-inset-bottom, 0);
   }
 }
 
@@ -60,26 +66,21 @@
   .animate-pulse-slow {
     animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
+
+  /* Optional utility for safe top padding */
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 1rem);
+  }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Custom scrollbar */
