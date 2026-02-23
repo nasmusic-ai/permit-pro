@@ -64,10 +64,10 @@ export function LoginForm() {
           </div>
           <div>
             <CardTitle className="text-2xl font-bold text-[#1A237E]">
-              Welcome to BilisPermit
+              Welcome to Permit PRO
             </CardTitle>
             <CardDescription className="text-gray-600">
-              Online Business Permit Application System
+              Online Municipal Business Permit Application System
             </CardDescription>
           </div>
         </CardHeader>
