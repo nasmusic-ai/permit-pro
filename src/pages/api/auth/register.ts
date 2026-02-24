@@ -1,7 +1,9 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 import bcrypt from "bcrypt";
 
+// Initialize DynamoDB client
 const client = new DynamoDBClient({
   region: process.env.AWS_REGION,
   credentials: {
@@ -11,13 +13,31 @@ const client = new DynamoDBClient({
 });
 const db = DynamoDBDocumentClient.from(client);
 
-export default async function handler(req, res) {
+type RegisterRequest = {
+  email: string;
+  password: string;
+};
+
+type RegisterResponse = {
+  success?: boolean;
+  id?: string;
+  error?: string;
+};
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<RegisterResponse>
+) {
   if (req.method !== "POST") return res.status(405).end();
 
-  const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: "Missing email or password" });
+  const { email, password } = req.body as RegisterRequest;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: "Missing email or password" });
+  }
 
   try {
+    // Hash the password
     const passwordHash = await bcrypt.hash(password, 10);
 
     const item = {
@@ -37,7 +57,7 @@ export default async function handler(req, res) {
 
     res.status(200).json({ success: true, id: item.id });
   } catch (err) {
-    console.error(err);
+    console.error("Register error:", err);
     res.status(500).json({ error: "Server error" });
   }
 }
