@@ -9,7 +9,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useAuthStore } from '@/store';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -20,16 +19,11 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
   const navigate = useNavigate();
-  const { login } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormData>({
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
@@ -38,11 +32,19 @@ export function LoginForm() {
     setError('');
 
     try {
-      const success = await login(data.email, data.password);
-      if (success) {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const result = await res.json();
+
+      if (res.ok && result.token) {
+        localStorage.setItem('token', result.token); // store JWT
         navigate('/dashboard');
       } else {
-        setError('Invalid email or password.');
+        setError(result.error || 'Invalid email or password.');
       }
     } catch {
       setError('An error occurred. Please try again.');
@@ -57,7 +59,7 @@ export function LoginForm() {
         <CardHeader className="space-y-4 text-center">
           <div className="mx-auto w-15 h-15 bg-[#1A237E] rounded-full flex items-center justify-center">
             <img
-              src="https://github.com/nasmusic-ai/RAW/blob/main/Permit-pro.png?raw=true" // replace with your PNG URL
+              src="https://github.com/nasmusic-ai/RAW/blob/main/Permit-pro.png?raw=true"
               alt="Building Icon"
               className="w-12 h-12 object-contain"
             />
@@ -72,82 +74,42 @@ export function LoginForm() {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          {error && (
-            <Alert variant="destructive" className="bg-red-50 border-red-200">
-              <AlertDescription className="text-red-700">{error}</AlertDescription>
-            </Alert>
-          )}
+          {error && <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert>}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-[#1A237E]">Email</Label>
-              <div className="relative">
-                <img
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjkfSDCkgi8pVPZTKuNmNSfzaOqVSRPVX2WA&s" // replace with your PNG URL
-                  alt="Mail Icon"
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
-                />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  className="pl-10 border-[#1A237E]/20 focus:border-[#1A237E] focus:ring-[#1A237E]"
-                  {...register('email')}
-                />
-              </div>
-              {errors.email && (
-                <p className="text-sm text-red-600">{errors.email.message}</p>
-              )}
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" placeholder="Enter your email" {...register('email')} />
+              {errors.email && <p className="text-red-600 text-sm">{errors.email.message}</p>}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-[#1A237E]">Password</Label>
+              <Label htmlFor="password">Password</Label>
               <div className="relative">
-                <img
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT80kdItiqvo6A_di6i8pqPicZJTRqkTVyAlQ&s" // replace with your PNG URL
-                  alt="Lock Icon"
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
-                />
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Enter your password"
-                  className="pl-10 pr-10 border-[#1A237E]/20 focus:border-[#1A237E] focus:ring-[#1A237E]"
                   {...register('password')}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2">
+                  {showPassword ? <EyeOff /> : <Eye />}
                 </button>
               </div>
-              {errors.password && (
-                <p className="text-sm text-red-600">{errors.password.message}</p>
-              )}
+              {errors.password && <p className="text-red-600 text-sm">{errors.password.message}</p>}
             </div>
 
-            <Button
-              type="submit"
-              className="w-full bg-[#1A237E] hover:bg-[#283593] text-white font-semibold py-2"
-              disabled={isLoading}
-            >
+            <Button type="submit" disabled={isLoading}>
               {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>
           </form>
 
-          <div className="text-center space-y-2 mt-4">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <button
-                onClick={() => navigate('/register')}
-                className="text-[#1A237E] font-semibold hover:underline"
-              >
-                Register here
-              </button>
-            </p>
-          </div>
+          <p className="text-center text-sm mt-4">
+            Don't have an account?{' '}
+            <button onClick={() => navigate('/register')} className="text-[#1A237E] hover:underline">
+              Register here
+            </button>
+          </p>
         </CardContent>
       </Card>
     </div>

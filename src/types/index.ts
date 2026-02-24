@@ -1,3 +1,4 @@
+// --- User & Roles ---
 export type UserRole = 'applicant' | 'staff' | 'treasurer' | 'admin';
 
 export interface User {
@@ -11,6 +12,7 @@ export interface User {
   isActive: boolean;
 }
 
+// --- Application Status ---
 export type ApplicationStatus = 
   | 'draft'
   | 'submitted'
@@ -21,6 +23,10 @@ export type ApplicationStatus =
   | 'rejected'
   | 'permit_issued';
 
+// --- Location ---
+export type { Barangay, Municipality, Location } from './location';
+
+// --- Business & Owner Info ---
 export interface BusinessInfo {
   businessName: string;
   businessType: string;
@@ -29,10 +35,7 @@ export interface BusinessInfo {
   tinNumber?: string;
   vatNumber?: string;
   businessAddress: string;
-  barangay: string;
-  city: string;
-  province: string;
-  zipCode: string;
+  location: Location;
   businessPhone: string;
   businessEmail: string;
   businessArea: number;
@@ -51,16 +54,14 @@ export interface OwnerInfo {
   nationality: string;
   civilStatus: string;
   homeAddress: string;
-  barangay: string;
-  city: string;
-  province: string;
-  zipCode: string;
+  location: Location;
   phone: string;
   email: string;
   idType: string;
   idNumber: string;
 }
 
+// --- Documents ---
 export interface Document {
   id: string;
   applicationId: string;
@@ -87,6 +88,7 @@ export type DocumentType =
   | 'picture'
   | 'other';
 
+// --- Payments ---
 export interface Payment {
   id: string;
   applicationId: string;
@@ -102,6 +104,7 @@ export interface Payment {
   notes?: string;
 }
 
+// --- Applications ---
 export interface Application {
   id: string;
   applicantId: string;
@@ -124,6 +127,7 @@ export interface Application {
   updatedAt: Date;
 }
 
+// --- Status History ---
 export interface StatusHistory {
   id: string;
   applicationId: string;
@@ -134,6 +138,7 @@ export interface StatusHistory {
   createdAt: Date;
 }
 
+// --- Notifications ---
 export interface Notification {
   id: string;
   userId: string;
@@ -146,6 +151,7 @@ export interface Notification {
   createdAt: Date;
 }
 
+// --- Permits ---
 export interface Permit {
   id: string;
   applicationId: string;
@@ -160,6 +166,7 @@ export interface Permit {
   isActive: boolean;
 }
 
+// --- Dashboard Stats ---
 export interface DashboardStats {
   totalApplications: number;
   pendingReview: number;
@@ -170,6 +177,7 @@ export interface DashboardStats {
   totalRevenue: number;
 }
 
+// --- Fee Structure ---
 export interface FeeStructure {
   id: string;
   businessType: string;
